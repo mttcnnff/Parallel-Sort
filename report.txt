@@ -1,0 +1,38 @@
+OS: Ubuntu 16.04 (VM)
+CPU: Intel Core i7-3615QM CPU @ 2.30GHz
+Cores: 2 (Given on Virtual Box)
+RAM: 3GB
+
+
++---+--------+--------+--------+--------+-------------------+
+| P | Test 1 | Test 2 | Test 3 | Median | Parallel Speed-up |
++---+--------+--------+--------+--------+-------------------+
+| 1 |  14.22 |  13.53 |  14.22 |  14.22 |                 1 |
+| 4 |   7.91 |   7.91 |   8.10 |   7.91 |              1.80 |
+| 8 |   7.77 |  10.19 |   7.98 |   7.77 |              1.83 |
++---+--------+--------+--------+--------+-------------------+
+
+My Results:  The results I got are interesting since they show the
+advantages of parallelism but they are run on a VM. The VM I use is an
+Linux Ubuntu 16.04 with 2 Cores and 3GB of RAM. As the data shows
+running with 1 process is slowest at about 14 seconds. The interesting
+part is that the speedup for both 4 cores and 8 is very similar. This
+is because with the number of cores being 2 the best we can do is
+parallelize accross two processors. That's the maximim advantage we
+can get. Even if we parallelize with more than 2 multiple processes
+will be running on one core. In addition, I'd like to point out that
+the Parallel Speed- up values I got when running my tests are
+approximately the same as the number of cores on my VM.
+
+
+Is Sample Sort a Good Parallel Sorting Algorithm? In my opinion, ssort
+is an okay sorting algorithm. It acheives the goal of some performance
+improvements with parallization, however in reference to Amdahl's Law
+it is only as fast as it's slowest process. More specifically as the
+program waits for all child processes to finish sorting their
+partition the one that takes the longest is the bottleneck for the
+program. This means that the whole program is only as fast as the
+slowest sort, which is really a function of how large the partition
+is. This means it all comes down to sampling (similar to quicksort)
+and how you pick your pivots. Ideally, you'd like very evenly sized
+partitions with wide ranges, however you will not always get this.
