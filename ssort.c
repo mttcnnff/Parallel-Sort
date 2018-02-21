@@ -84,25 +84,17 @@ run_sort_workers(float* data, long size, int P, floats* samps, long* sizes, barr
     pid_t kids[P];
 
     for (int ii = 0; ii < P; ++ii) {
-        if((kids[ii] = fork()))
+        if(!(kids[ii] = fork()))
         {
-            // parent
-            int rv = waitpid(kids[ii], 0, WNOHANG);
-            check_rv(rv);
-
-        } else {
             // child
             sort_worker(ii, data, size, P, samps, sizes, bb);
             exit(0);
         }
     }
 
-    // TODO: spawn P processes, each running sort_worker
-
-    // for (int ii = 0; ii < P; ++ii) {
-    //     //int rv = waitpid(kids[ii], 0, 0);
-    //     //check_rv(rv);
-    // }
+    for (int ii = 0; ii < P; ++ii) {
+        waitpid(kids[ii], 0, 0);
+    }
 }
 
 void
@@ -145,7 +137,6 @@ main(int argc, char* argv[])
 
     // TODO: These should probably be from the input file.
     long count = *(long*)file;
-    printf("count = %ld\n", count);
 
     float *data = (float*)file + sizeof(long)/sizeof(float);
 
@@ -158,7 +149,8 @@ main(int argc, char* argv[])
 
     free_barrier(bb);
 
-    // TODO: munmap your mmaps
+    munmap(file, fsize);
+    munmap(sizes, sizes_bytes);
 
     return 0;
 }
