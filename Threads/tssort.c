@@ -116,9 +116,8 @@ run_sort_workers(floats* input, const char* output, int P, floats* samps, long* 
     }
 
     for (int i = 0; i < P; i++) {
-        void* ret;
-        rv = pthread_join(threads[i], &ret);
-        (void) ret;
+        rv = pthread_join(threads[i], 0);
+        check_rv(rv);
     }
 }
 
