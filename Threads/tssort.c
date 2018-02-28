@@ -187,6 +187,7 @@ main(int argc, char* argv[])
     sample_sort(input, oname, P, sizes, bb);
 
     free(sizes);
+    free(fs);
 
     free_barrier(bb);
     free_floats(input);
