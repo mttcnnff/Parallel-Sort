@@ -1,0 +1,30 @@
+OS: Ubuntu 16.04 (VM)
+CPU: Intel Core i7-3615QM CPU @ 2.30GHz
+Cores: 2 (Given on Virtual Box)
+RAM: 3GB
+
+
++---+--------+--------+--------+--------+-------------------+
+| T | Test 1 | Test 2 | Test 3 | Median | Parallel Speed-up |
++---+--------+--------+--------+--------+-------------------+
+| 1 |  13.68 |  13.68 |  14.27 |  13.68 |                 1 |
+| 4 |   9.21 |   8.64 |   9.15 |   9.15 |              1.50 |
+| 8 |   9.97 |   9.38 |  10.31 |   9.97 |              1.37 |
++---+--------+--------+--------+--------+-------------------+
+
+- A paragraph or two discussing what results you got and why you got
+them.   
+
+I got interesting results because my expected speed ups did not match
+the T number of threads I used in each test. I believe this is because
+I'm on a VM with only two cores. I believe running on the VM
+introduduces some complexity in my test times. I think I'm able to get
+some speed up with 4 threads but thats the limit of threads my VM can
+use so I don't get much faster with more threads than that.
+
+- How do you results compare to the process / mmap version? Why?
+
+My results are pretty close to the results I got with processes. I
+think one place that could have a large performance slowdown is with
+IO. With processes we used memory maps, which are very fast, however
+with threads we use read and write which could be slow.

@@ -82,10 +82,7 @@ sort_worker(sort_args* args)
     rv = lseek(ofd, sizeof(long) + (offset*sizeof(float)), SEEK_SET);
     check_rv(rv);
 
-    for (int i = 0; i < args->sizes[args->pnum]; i++)
-    {
-        write(ofd, &xs->data[i], sizeof(args->samps->data[args->pnum]));
-    }
+    write(ofd, xs->data, (xs->size*sizeof(float)));
 
     rv = close(ofd);
     check_rv(rv);
@@ -119,6 +116,8 @@ run_sort_workers(floats* input, const char* output, int P, floats* samps, long* 
         rv = pthread_join(threads[i], 0);
         check_rv(rv);
     }
+
+    return;
 }
 
 void
@@ -157,14 +156,20 @@ main(int argc, char* argv[])
     rv = lseek(input_fd, sizeof(long), SEEK_SET);
     check_rv(rv);
 
+    
+    float* fs = malloc(count * sizeof(float));
+    rv = read(input_fd, fs, count * sizeof(float));
+    check_rv(rv);
+
     floats* input = make_floats(0);
-    float read_float;
     for (int i = 0; i < count; i++)
     {
-        rv = read(input_fd, &read_float, sizeof(float));
-        check_rv(rv);
-        floats_push(input, read_float);
+        floats_push(input, fs[i]);
     }
+
+    // printf("Count = %ld\n", count);
+
+    // floats_print(input);
 
     int ofd = open(oname, O_CREAT|O_TRUNC|O_WRONLY, 0644);
     check_rv(ofd);
